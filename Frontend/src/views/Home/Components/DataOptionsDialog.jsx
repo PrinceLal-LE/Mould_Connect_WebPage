@@ -1,10 +1,19 @@
-import React from 'react';
-import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Modal, Button, Spinner, Alert, Form } from 'react-bootstrap';
 
 const DataOptionsDialog = ({ show, onHide, data, loading, error }) => {
+    const [selectedOptions, setSelectedOptions] = useState([]); // This line is crucial for defining selectedOptions
+    const handleCheckboxChange = (event) => {
+        const optionId = event.target.value;
+        if (event.target.checked) {
+            setSelectedOptions((prev) => [...prev, optionId]);
+        } else {
+            setSelectedOptions((prev) => prev.filter((id) => id !== optionId));
+        }
+    };
     return (
         <Modal show={show} onHide={onHide} centered>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton>  
                 <Modal.Title>Select Data Option</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -22,13 +31,21 @@ const DataOptionsDialog = ({ show, onHide, data, loading, error }) => {
                 )}
                 {!loading && !error && data.length > 0 && (
                     <div>
-                        <h5>Available Data:</h5>
-                        <ul>
-                            {data.map((item, index) => (
-                                // Assuming each data item has an 'id' and 'name' property
-                                <li key={item.id || index}>{item.name || `Data Item ${index + 1}`}</li>
-                            ))}
-                        </ul>
+                        <Form>
+                        <h5>Available Options:</h5>
+                        {data.map((item) => (
+                            <Form.Check
+                                key={item.id}
+                                type="checkbox"
+                                id={`checkbox-${item.id}`}
+                                label={item.name}
+                                value={item.id}
+                                checked={selectedOptions.includes(item.id)}
+                                onChange={handleCheckboxChange}
+                                className="mb-2"
+                            />
+                        ))}
+                        </Form>
                         {/* You can add more interactive elements here, e.g., buttons to select data */}
                     </div>
                 )}
