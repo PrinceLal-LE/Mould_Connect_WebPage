@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const routers = require('./router/auth-router');
 const connectDB = require('./utils/database');
+const checkboxOptionsRouter = require('./router/postDialougeBox-router');
 const helmet = require('helmet');
 const cors = require('cors');
 // Middleware\
@@ -14,7 +15,7 @@ app.use(cors({
 app.use(helmet());
 app.use(express.json());
 app.use("/api/auth", routers);
-
+app.use("/api", checkboxOptionsRouter);
 // Routes
 app.get('/', (req, res) => {
   res.json({ message: "Prince Lal" });
